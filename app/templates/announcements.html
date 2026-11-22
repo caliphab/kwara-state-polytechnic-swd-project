@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/announcements.css') }}">
+{% endblock %}
+
+{% block title %}
+Announcements | Kwara State Polytechnic
+{% endblock %}
+
+{% block main %}
+<section class="announcements-container">
+    <!-- Top Banner -->
+    <div class="announcements-header">
+        <div>
+            <h1><i class="fa-solid fa-bullhorn"></i> Departmental Announcements</h1>
+            <p>Official circulars, lecture updates, and semester notices for 2026/2027.</p>
+        </div>
+
+        <div class="header-actions">
+            <a href="{{ url_for('page.dashboard') }}" class="btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Dashboard
+            </a>
+            {% if can_post %}
+            <button type="button" id="toggle-post-form" class="btn-gold">
+                <i class="fa-solid fa-plus"></i> New Announcement
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if can_post %}
+    <div id="post-form-card" class="post-form-card {% if not form.errors %}hidden{% endif %}">
+        <h3><i class="fa-solid fa-pen-nib"></i> Publish New Notice</h3>
+        <form method="POST" action="{{ url_for('announcements.create_announcements') }}" class="notice-form" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-row">
+                <div class="form-field">
+                    {{ form.title.label }}
+                    {{ form.title(placeholder="e.g. Announcement on ...") }}
+                    {% for error in form.title.errors %}
+                    <small class="error-text">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="form-field">
+                    {{ form.category.label }}
+                    {{ form.category() }}
+                </div>
+            </div>
+
+            <div class="form-field">
+                {{ form.body.label }}
+                {{ form.body(rows="4", placeholder="Write the full announcement details here...") }}
+                {% for error in form.body.errors %}
+                <small class="error-text">{{ error }}</small>
+                {% endfor %}
+            </div>
+
+            <div class="form-footer-row">
+                <label class="pin-checkbox">
+                    {{ form.is_pinned() }}
+                    <span>Pin this announcement to the top</span>
+                </label>
+
+                {{ form.submit(class="btn-publish") }}
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Category Filter Bar -->
+    <div class="filter-bar">
+        {% set categories = ['All', 'General', 'Lecture', 'Timetable', 'Exam', 'Registration'] %}
+        {% for cat in categories %}
+        <a href="{{ url_for('page.announcements', category=cat) }}"
+            class="filter-pill {% if category_filter == cat %}active{% endif %}">
+            {{ cat }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Announcements Feed -->
+    {% if announcements %}
+    <div class="notices-feed">
+        {% for notice in announcements %}
+        <article class="notice-card {% if notice.is_pinned %}pinned{% endif %}">
+            <div class="notice-top">
+                <div class="notice-badges">
+                    {% if notice.is_pinned %}
+                    <span class="badge-pinned"><i class="fa-solid fa-thumbtack"></i> Pinned</span>
+                    {% endif %}
+                    <span class="badge-category">{{ notice.category }}</span>
+                </div>
+
+                {% if current_user.role.value == 'admin' or (current_user.id == notice.author_id and
+                current_user.role.value == 'classrep') %}
+                <form method="POST" action="{{ url_for('announcements.delete_announcement', notice_id=notice.id) }}"
+                    onsubmit="return confirm('Delete this announcement?');">
+                    <input type="hidden" name="csrf_token" value="">
+                    <button type="submit" class="btn-delete-notice" title="Delete announcement">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+
+            <h2>{{ notice.title }}</h2>
+            <p class="notice-body">{{ notice.body }}</p>
+
+            <div class="notice-meta">
+                <span>
+                    <i class="fa-solid fa-user-pen"></i>
+                    Posted by <strong>{{ notice.author.surname }} {{ notice.author.lastname }}</strong>
+                    ({{ notice.author.role.value|capitalize }})
+                </span>
+                <span>
+                    <i class="fa-regular fa-clock"></i>
+                    {{ notice.created_at.strftime('%d %b %Y, %I:%M %p') }}
+                </span>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-notices">
+        <i class="fa-solid fa-bullhorn"></i>
+        <h3>No Announcements Found</h3>
+        <p>There are currently no notices under "{{ category_filter }}".</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/announcements.js') }}"></script>
+{% endblock %}

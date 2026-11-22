@@ -1,0 +1,132 @@
+/* ===== Admin Toolbar & Search ===== */
+.admin-toolbar {
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-filter-form {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.admin-filter-form input,
+.admin-filter-form select {
+    padding: 0.55rem 0.85rem;
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: #fafafa;
+}
+
+.admin-filter-form input:focus,
+.admin-filter-form select:focus {
+    outline: none;
+    border-color: var(--primary-green, #0b5d1e);
+    background-color: var(--white, #ffffff);
+}
+
+.btn-filter {
+    padding: 0.55rem 1rem;
+    background-color: var(--primary-green, #0b5d1e);
+    color: var(--white, #ffffff);
+    border: none;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-filter:hover {
+    background-color: var(--dark-green, #073d14);
+}
+
+/* ===== Table User Cell & Badges ===== */
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.mini-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.courses-table td.center-cell {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.text-muted {
+    color: var(--text-muted, #6b7280);
+    font-size: 0.82rem;
+}
+
+.status-pill.offline {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background-color: #f3f4f6;
+    color: var(--text-muted, #6b7280);
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 5px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+.role-student {
+    background-color: rgba(37, 99, 235, 0.12);
+    color: #2563eb;
+}
+
+.role-classrep {
+    background-color: rgba(212, 160, 23, 0.18);
+    color: #9a6e06;
+}
+
+.role-admin {
+    background-color: rgba(11, 93, 30, 0.15);
+    color: var(--primary-green, #0b5d1e);
+}
+
+/* ===== Inline Role Update Form ===== */
+.role-form {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.role-form select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 5px;
+    font-size: 0.85rem;
+}
+
+.btn-role-save {
+    padding: 0.42rem 0.8rem;
+    background-color: var(--primary-green, #0b5d1e);
+    color: var(--white, #ffffff);
+    border: none;
+    border-radius: 5px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-role-save:hover {
+    background-color: var(--dark-green, #073d14);
+}
+.calendar-admin-panel{margin-bottom:26px}.calendar-admin-panel>p{margin:14px 0;color:#546077;line-height:1.7}.calendar-upload-form{display:grid;grid-template-columns:1fr 1fr 1.4fr auto;gap:12px;align-items:end;margin:22px 0}.calendar-upload-form label{display:grid;gap:7px;font-weight:700;font-size:.91rem;color:#253453}.calendar-upload-form input,.calendar-upload-form select{border:1px solid #cbd1e1;border-radius:9px;padding:10px;max-width:100%;background:#fff}.calendar-publish-btn{background:#5540b3;color:#fff;border:0;border-radius:9px;padding:13px 17px;font-weight:700;cursor:pointer}.calendar-template-link{color:#453593;font-weight:700;text-decoration:none}.calendar-help code{background:#f0eef9;padding:2px 5px;border-radius:4px}@media(max-width:1060px){.calendar-upload-form{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.calendar-upload-form{grid-template-columns:1fr}}

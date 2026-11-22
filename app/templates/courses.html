@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/courses.css') }}">
+{% endblock %}
+
+{% block title %}
+Course Registration | Kwara State Polytechnic
+{% endblock %}
+
+{% block main %}
+<section class="courses-container">
+    <!-- Top Banner -->
+    <div class="courses-header">
+        <div>
+            <span class="session-pill">2026/2027 Session</span>
+            <h1><i class="fa-solid fa-book-open-reader"></i> Course Registration</h1>
+            <p>Select your semester courses below (Maximum of {{ max_units }} credit units per semester).</p>
+        </div>
+
+        <div class="header-actions">
+            <a href="{{ url_for('page.dashboard') }}" class="btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Dashboard
+            </a>
+            {% if can_manage %}
+            <button type="button" id="toggle-course-form" class="btn-gold">
+                <i class="fa-solid fa-plus"></i> Add New Course
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Collapsible Add Course Form (Admin & Class Rep Only) -->
+    {% if can_manage %}
+    <div id="course-form-card" class="course-form-card hidden">
+        <h3><i class="fa-solid fa-circle-plus"></i> Add Course to Catalog</h3>
+        <form method="POST" action="{{ url_for('courses.create_course') }}" class="course-form" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-grid">
+                <div class="form-field">
+                    {{ form.code.label }}
+                    {{ form.code(placeholder="e.g. COM 311") }}
+                </div>
+
+                <div class="form-field">
+                    {{ form.title.label }}
+                    {{ form.title(placeholder="e.g. Operating Systems I") }}
+                </div>
+
+                <div class="form-field">
+                    {{ form.units.label }}
+                    {{ form.units(placeholder="e.g. 3") }}
+                </div>
+
+                <div class="form-field">
+                    {{ form.semester.label }}
+                    {{ form.semester() }}
+                </div>
+
+                <div class="form-field">
+                    {{ form.level.label }}
+                    {{ form.level() }}
+                </div>
+
+                <div class="form-field">
+                    {{ form.lecturer.label }}
+                    {{ form.lecturer(placeholder="e.g. Mr. A. O. Bello") }}
+                </div>
+            </div>
+
+            <div class="form-actions">
+                {{ form.submit(class="btn-save-course") }}
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Semester & Level Filter Bar -->
+    <div class="catalog-controls">
+        <div class="semester-tabs">
+            <a href="{{ url_for('page.courses', semester='First', level=level_filter) }}"
+                class="sem-tab {% if semester_filter == 'First' %}active{% endif %}">
+                First Semester
+            </a>
+            <a href="{{ url_for('page.courses', semester='Second', level=level_filter) }}"
+                class="sem-tab {% if semester_filter == 'Second' %}active{% endif %}">
+                Second Semester
+            </a>
+        </div>
+
+        <div class="level-filters">
+            {% if can_manage %}
+            {% for lvl in ['All', 'ND I', 'ND II', 'HND I', 'HND II'] %}
+            <a href="{{ url_for('page.courses', semester=semester_filter, level=lvl) }}"
+                class="lvl-pill {% if level_filter == lvl %}active{% endif %}">
+                {{ lvl }}
+            </a>
+            {% endfor %}
+            {% else %}
+            <span class="lvl-pill active">
+                <i class="fa-solid fa-graduation-cap"></i> Level: {{ current_user.level }}
+            </span>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Two-Column Workspace: Available Courses vs Registered Slip -->
+    <div class="courses-workspace {% if can_manage %}admin-single-col{% endif %}">
+        <!-- Left: Available Courses Catalog -->
+        <div class="workspace-panel">
+            <div class="panel-title">
+                <h2>Available Courses ({{ semester_filter }} Semester)</h2>
+                <span>{{ available_courses|length }} courses</span>
+            </div>
+
+            {% if available_courses %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Course Title</th>
+                            <th>Level</th>
+                            <th>Units</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in available_courses %}
+                        <tr>
+                            <td><strong>{{ course.code }}</strong></td>
+                            <td>
+                                <div>{{ course.title }}</div>
+                                {% if course.lecturer %}
+                                <small class="lecturer-name"><i class="fa-solid fa-chalkboard-user"></i> {{
+                                    course.lecturer }}</small>
+                                {% endif %}
+                            </td>
+                            <td><span class="level-tag">{{ course.level }}</span></td>
+                            <td><strong>{{ course.units }}</strong></td>
+                            <td class="action-cell">
+                                {% if not can_manage %}
+                                {% if course.id in registered_course_ids %}
+                                <span class="badge-registered"><i class="fa-solid fa-check"></i> Registered</span>
+                                {% else %}
+                                <form method="POST"
+                                    action="{{ url_for('courses.register_course', course_id=course.id) }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn-register">Register</button>
+                                </form>
+                                {% endif %}
+                                {% endif %}
+
+                                {% if can_manage %}
+                                <form method="POST" action="{{ url_for('courses.delete_course', course_id=course.id) }}"
+                                    onsubmit="return confirm('Delete {{ course.code }} from catalog?');">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn-icon-delete" title="Remove course">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-box">
+                <i class="fa-solid fa-book"></i>
+                <p>No courses listed for {{ semester_filter }} Semester ({{ level_filter }}).</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right: Student's Registered Courses Slip -->
+        {% if not can_manage %}
+        <div class="workspace-panel slip-panel">
+            <div class="panel-title">
+                <h2>My Registered Courses</h2>
+                <span class="unit-counter {% if total_units >= max_units %}limit-reached{% endif %}">
+                    {{ total_units }} / {{ max_units }} Units
+                </span>
+            </div>
+
+            {% if user_registrations %}
+            <div class="registered-list">
+                {% for reg in user_registrations %}
+                <div class="registered-item">
+                    <div>
+                        <strong>{{ reg.course.code }}</strong> &mdash; {{ reg.course.title }}
+                        <small>{{ reg.course.units }} Credit Unit(s)</small>
+                    </div>
+                    <form method="POST" action="{{ url_for('courses.drop_course', reg_id=reg.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn-drop" title="Drop course">Drop</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" onclick="window.print()" class="btn-print-slip">
+                <i class="fa-solid fa-print"></i> Print Course Form
+            </button>
+            {% else %}
+            <div class="empty-box">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <p>You have not registered any {{ semester_filter }} Semester courses yet.</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/courses.js') }}"></script>
+{% endblock %}

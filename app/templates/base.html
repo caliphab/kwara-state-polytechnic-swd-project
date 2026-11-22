@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="{{ url_for('static', filename='assets/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}">
+
+    {% block head %} {% endblock %}
+
+    <title>
+        {% block title %} {% endblock %}
+    </title>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+            <h2>Kwara State Polytechnic</h2>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('page.home') }}">Home</a></li>
+                <li><a href="{{ url_for('page.about') }}">About</a></li>
+                <li><a href="{{ url_for('calendar.view_calendar') }}">Calendar</a></li>
+                <li><a href="{{ url_for('page.dashboard') }}">Dashboard</a></li>
+            </ul>
+
+            <button type="button" id="nav-login-btn" {% if current_user.is_authenticated %}
+                data-logout-url="{{ url_for('auth.signout') }}" {% endif %}>
+                {% if current_user.is_authenticated %}
+                Logout
+                {% else %}
+                Login
+                {% endif %}
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-container" id="flash-container">
+            {% for category, message in messages %}
+            <div class="flash-alert flash-{{ category }}" role="alert">
+                <div class="flash-icon">
+                    {% if category == 'success' %}
+                    <i class="fa-solid fa-circle-check"></i>
+                    {% elif category == 'danger' or category == 'error' %}
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    {% elif category == 'warning' %}
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    {% else %}
+                    <i class="fa-solid fa-circle-info"></i>
+                    {% endif %}
+                </div>
+
+                <div class="flash-body">
+                    <p>{{ message }}</p>
+                </div>
+
+                <button type="button" class="flash-close" aria-label="Dismiss notification">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block main %} {% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Kwara State Polytechnic Logo">
+                <h3>Kwara State Polytechnic</h3>
+                <p>Technology for Self-Reliance. Providing quality technical and vocational education in Ilorin, Kwara
+                    State, Nigeria.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('page.home') }}">Home</a></li>
+                    <li><a href="{{ url_for('page.courses') }}">Courses</a></li>
+                    <li><a href="{{ url_for('page.announcements') }}">Announcements</a></li>
+                    <li><a href="{{ url_for('page.about') }}">About This Platform</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-portal">
+                <h4>Student Portal</h4>
+                <ul>
+                    <li><a href="#">Student Login</a></li>
+                    <li><a href="#">New Student Registration</a></li>
+                    <li><a href="{{ url_for('calendar.view_calendar') }}">Academic Calendar</a></li>
+                    <li><a href="#">Help &amp; Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>Old Jebba Road, P.M.B. 1375, Ilorin, Kwara State, Nigeria.</p>
+                <p>Email: info@kwarastatepolytechnic.edu.ng</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Kwara State Polytechnic, Ilorin. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='scripts/base.js') }}"></script>
+
+    {% block scripts %} {% endblock %}
+</body>
+
+</html>

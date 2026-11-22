@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/calendar.css') }}">{% endblock %}
+{% block title %}Academic Calendar | NACOS Group C{% endblock %}
+{% block main %}
+<section class="info-hero">
+  <div class="info-wrap"><span class="info-kicker">NACOS · HND II GROUP C · 2026/2027</span>
+    <h1>Academic Calendar</h1>
+    <p>Stay informed about academic activities, registration periods and important upcoming dates.</p>
+  </div>
+</section>
+<div class="info-wrap info-content">
+  <section class="info-panel calendar-public-panel">
+    <div class="calendar-heading">
+      <div>
+        <h2>Published Academic Events</h2>
+        <p>Events are published by the portal administrator. Confirm official dates with the institution.</p>
+      </div>{% if current_user.is_authenticated and current_user.role.value == 'admin' %}<a class="calendar-back"
+        href="{{ url_for('page.dashboard') }}#calendar-management">Manage Calendar</a>{% endif %}
+    </div>
+    <form method="GET" action="{{ url_for('calendar.view_calendar') }}" class="calendar-filter">
+      <label>Academic Session<select name="session">{% if not sessions %}<option value="2026/2027">2026/2027</option>{%
+          endif %}{% for s in sessions %}<option value="{{ s }}" {% if s==selected_session %}selected{% endif %}>{{ s }}
+          </option>{% endfor %}</select></label>
+      <label>Semester<select name="semester">
+          <option value="All" {% if selected_semester=='All' %}selected{% endif %}>All Semesters</option>
+          <option value="First" {% if selected_semester=='First' %}selected{% endif %}>First Semester</option>
+          <option value="Second" {% if selected_semester=='Second' %}selected{% endif %}>Second Semester</option>
+        </select></label>
+      <button type="submit">Apply Filters</button>
+    </form>
+    {% if events %}<div class="calendar-table-wrap">
+      <table class="academic-table">
+        <thead>
+          <tr>
+            <th>Dates</th>
+            <th>Activity</th>
+            <th>Category</th>
+            <th>Semester</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}<tr>
+            <td class="date-cell">{{ event.start_date.strftime('%d %b %Y') }}{% if event.end_date != event.start_date
+              %}<span>to {{ event.end_date.strftime('%d %b %Y') }}</span>{% endif %}</td>
+            <td><strong>{{ event.title }}</strong></td>
+            <td><span class="academic-pill">{{ event.category }}</span></td>
+            <td>{{ event.semester }}</td>
+            <td>{{ event.description or '—' }}</td>
+          </tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>{% else %}<div class="calendar-empty"><span aria-hidden="true"><i class="fas fa-calendar"></i></span>
+      <h3>No academic calendar published yet</h3>
+      <p>There are no events for the selected academic session and semester.</p>
+    </div>{% endif %}
+  </section>
+</div>
+{% endblock %}

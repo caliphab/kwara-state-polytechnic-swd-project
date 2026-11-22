@@ -1,0 +1,325 @@
+:root {
+    --primary-green: #0b5d1e;
+    --dark-green: #073d14;
+    --accent-gold: #d4a017;
+    --light-bg: #f4f6f8;
+    --white: #ffffff;
+    --text-dark: #1f2937;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-dark);
+    background-color: var(--light-bg);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+ul {
+    list-style: none;
+}
+
+header {
+    background-color: var(--white);
+    border-bottom: 3px solid var(--primary-green);
+    padding: 0.9rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+header .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+header .logo img {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    object-fit: contain;
+}
+
+header .logo h2 {
+    font-size: 1.25rem;
+    color: var(--primary-green);
+    font-weight: 700;
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+}
+
+header nav ul {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+header nav ul li a {
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+header nav ul li a:hover {
+    color: var(--primary-green);
+}
+
+header nav button {
+    background-color: var(--primary-green);
+    color: var(--white);
+    border: none;
+    padding: 0.55rem 1.25rem;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+header nav button:hover {
+    background-color: var(--dark-green);
+}
+
+/* ===== Flash Messages (Toast Alerts) ===== */
+.flash-container {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 10000;
+    /* Above header and auth modal overlay */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 400px;
+    pointer-events: none;
+}
+
+.flash-alert {
+    pointer-events: auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    background-color: var(--white, #ffffff);
+    color: var(--text-dark, #1f2937);
+    padding: 1rem 1.15rem;
+    border-radius: 8px;
+    border-left: 5px solid var(--primary-green, #0b5d1e);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+    animation: slideInFlash 0.3s ease forwards;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.flash-alert.fade-out {
+    opacity: 0;
+    transform: translateX(25px);
+}
+
+@keyframes slideInFlash {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.flash-icon {
+    font-size: 1.2rem;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.flash-body {
+    flex: 1;
+    font-size: 0.92rem;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+.flash-close {
+    background: none;
+    border: none;
+    color: var(--text-muted, #6b7280);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.15rem;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.flash-close:hover {
+    color: var(--text-dark, #1f2937);
+}
+
+.flash-success {
+    border-left-color: #16a34a;
+}
+
+.flash-success .flash-icon {
+    color: #16a34a;
+}
+
+.flash-danger,
+.flash-error {
+    border-left-color: #dc2626;
+}
+
+.flash-danger .flash-icon,
+.flash-error .flash-icon {
+    color: #dc2626;
+}
+
+.flash-warning {
+    border-left-color: var(--accent-gold, #d4a017);
+}
+
+.flash-warning .flash-icon {
+    color: #d97706;
+}
+
+.flash-info {
+    border-left-color: #2563eb;
+}
+
+.flash-info .flash-icon {
+    color: #2563eb;
+}
+
+main {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+}
+
+footer {
+    background-color: var(--dark-green);
+    color: var(--white);
+    margin-top: auto;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 5% 2rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: 2rem;
+}
+
+.footer-about img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-bottom: 0.75rem;
+}
+
+.footer-about h3 {
+    font-size: 1.15rem;
+    color: var(--accent-gold);
+    margin-bottom: 0.5rem;
+}
+
+.footer-about p,
+.footer-contact p {
+    font-size: 0.9rem;
+    color: #d1d5db;
+    margin-bottom: 0.5rem;
+}
+
+footer h4 {
+    font-size: 1rem;
+    color: var(--accent-gold);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+footer ul li {
+    margin-bottom: 0.5rem;
+}
+
+footer ul li a {
+    font-size: 0.9rem;
+    color: #e5e7eb;
+}
+
+footer ul li a:hover {
+    color: var(--accent-gold);
+}
+
+.footer-bottom {
+    background-color: #052b0e;
+    text-align: center;
+    padding: 1rem 5%;
+    font-size: 0.85rem;
+    color: #9ca3af;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 900px) {
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    header nav {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .flash-container {
+        top: 0.85rem;
+        right: 0.85rem;
+        left: 0.85rem;
+        max-width: none;
+        width: auto;
+    }
+}

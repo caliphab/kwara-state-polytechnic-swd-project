@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/calendar.css') }}">{% endblock %}
+{% block title %}About NACOS Group C | Kwara State Polytechnic{% endblock %}
+{% block main %}
+<section class="info-hero">
+    <div class="info-wrap"><span class="info-kicker">NACOS · KWARA STATE POLYTECHNIC</span>
+        <h1>About Our Project</h1>
+        <p>Celebrating student innovation, academic collaboration and practical software development.</p>
+    </div>
+</section>
+<div class="info-wrap info-content">
+    <section class="info-panel"><span class="info-kicker">OUR INSTITUTION</span>
+        <h2>Kwara State Polytechnic, Ilorin</h2>
+        <p>Kwara State Polytechnic is a tertiary institution in Ilorin, Kwara State, Nigeria, offering technical,
+            vocational and professional education. Its computing students apply classroom knowledge to projects that
+            respond to real academic and community needs.</p>
+    </section>
+    <section class="info-panel"><span class="info-kicker">OUR STUDENT COMMUNITY</span>
+        <h2>About NACOS</h2>
+        <p>The Nigeria Association of Computing Students (NACOS) is a community for students studying computing-related
+            disciplines. It supports knowledge sharing, innovation, mentorship, teamwork and professional growth.</p>
+        <p>Within Kwara State Polytechnic, NACOS students contribute to a culture of learning and collaborative
+            problem-solving.</p>
+    </section>
+    <section class="info-panel info-panel-emphasis"><span class="info-kicker">PROJECT SPOTLIGHT · 2026/2027</span>
+        <h2>HND II — Group C</h2>
+        <p>This portal is a software development project by HND II Group C students for the 2026/2027 academic session.
+            It demonstrates practical web application design, authentication, course registration, announcements and the
+            publication of academic calendar events.</p>
+        <p>The project is an educational initiative and should not be confused with the official institutional student
+            portal or an official academic calendar unless content has been formally approved by the institution.</p>
+    </section>
+    <section class="info-panel">
+        <h2>What the platform provides</h2>
+        <div class="info-tiles">
+            <div>
+                <h3>Course Registration</h3>
+                <p>Explore available courses and manage semester course selections.</p>
+            </div>
+            <div>
+                <h3>Announcements</h3>
+                <p>View departmental notices and important academic information.</p>
+            </div>
+            <div>
+                <h3>Academic Calendar</h3>
+                <p>See academic events published by the portal administrators.</p>
+            </div>
+        </div>
+        <div class="info-cta"><a href="{{ url_for('calendar.view_calendar') }}">Explore Calendar</a><a
+                href="{{ url_for('page.home') }}">Back to Home</a></div>
+    </section>
+</div>
+{% endblock %}

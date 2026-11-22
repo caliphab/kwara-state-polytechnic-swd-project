@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
+{% endblock %}
+
+{% block title %}
+Edit Profile | Kwara State Polytechnic
+{% endblock %}
+
+{% block main %}
+<section class="profile-section">
+    <div class="profile-card">
+        <!-- Top Header -->
+        <div class="profile-header">
+            <div>
+                <h2>Edit Account Profile</h2>
+                <p>Update your contact details and passport photograph.</p>
+            </div>
+            <a href="{{ url_for('page.dashboard') }}" class="btn-back">
+                <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <form action="{{ url_for('user.update_profile') }}" method="POST" enctype="multipart/form-data"
+            class="profile-form" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="photo-upload-box">
+                <img src="{{ url_for('static', filename='assets/' + (current_user.photo or 'photo.png')) }}"
+                    alt="Current Profile Photo" id="photo-preview" class="profile-preview-img">
+
+                <div class="photo-upload-controls">
+                    <label for="photo-input" class="btn-upload-photo">
+                        <i class="fa-solid fa-camera"></i> Choose New Photo
+                    </label>
+                    {{ form.photo(id="photo-input", class="hidden-file-input", accept="image/png, image/jpeg,
+                    image/webp") }}
+                    <span class="file-hint" id="file-name-display">Allowed formats: JPG, PNG, WEBP</span>
+
+                    {% for error in form.photo.errors %}
+                    <small class="error-text">{{ error }}</small>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="readonly-section">
+                <h3><i class="fa-solid fa-lock"></i> Personal Details (Read-Only)</h3>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label>Matric / Staff Number</label>
+                        <input type="text" value="{{ current_user.matric }}" disabled>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Surname</label>
+                        <input type="text" value="{{ current_user.surname }}" disabled>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Middle Name</label>
+                        <input type="text" value="{{ current_user.middlename or '—' }}" disabled>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Last Name</label>
+                        <input type="text" value="{{ current_user.lastname }}" disabled>
+                    </div>
+                </div>
+            </div>
+
+            <div class="editable-section">
+                <h3><i class="fa-solid fa-pen-to-square"></i> Edit Contact Information</h3>
+                <div class="form-grid">
+                    <div class="form-field">
+                        {{ form.email.label }}
+                        {{ form.email(placeholder="student@example.com") }}
+                        {% for error in form.email.errors %}
+                        <small class="error-text">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-field">
+                        {{ form.mobile.label }}
+                        {{ form.mobile(placeholder="+234 800 000 0000") }}
+                        {% for error in form.mobile.errors %}
+                        <small class="error-text">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+                {{ form.submit(class="btn-save") }}
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
+{% endblock %}

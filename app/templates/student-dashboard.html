@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="https://jsdelivr.net">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+{% endblock %}
+
+{% block title %}
+Dashboard | Kwara State Polytechnic
+{% endblock %}
+
+{% block main %}
+<section class="dashboard-container">
+    <div class="dashboard-banner">
+        <div class="user-profile-summary">
+            <img src="{{ url_for('static', filename='assets/' + (current_user.photo or 'photo.png')) }}"
+                alt="Profile Photo" class="profile-avatar">
+            <div>
+                <span class="session-badge">2026/2027 Academic Session</span>
+                <h1>Welcome, {{ current_user.surname }} {{ current_user.lastname }}</h1>
+                <p class="user-meta">
+                    <strong>Matric No:</strong> {{ current_user.matric }} &nbsp;|&nbsp;
+                    <strong>Email:</strong> {{ current_user.email }}
+                </p>
+            </div>
+        </div>
+
+        <div class="banner-actions">
+            <a href="{{ url_for('page.courses') }}" class="btn-primary">
+                <i class="fa-solid fa-file-circle-plus"></i> Register Courses
+            </a>
+
+            {% if current_user.role.value == 'classrep' %}
+            <a href="{{ url_for('page.announcements') }}" class="btn-primary">
+                <i class="fa-solid fa-bullhorn"></i> Post Announcement
+            </a>
+            {% endif %}
+
+            <a href="#" class="btn-outline-danger">
+                <i class="fa-solid fa-book-open"></i> E-resources
+            </a>
+        </div>
+    </div>
+
+    <div class="profile-cta-card">
+        <div class="profile-cta-info">
+            <div class="cta-icon">
+                <i class="fa-solid fa-user-pen"></i>
+            </div>
+            <div>
+                <h3>Keep Your Student Profile Up to Date</h3>
+                <p>
+                    {% if not current_user.mobile or current_user.photo == 'photo.png' %}
+                    Your profile is incomplete. Add your mobile number and upload an official passport photo.
+                    {% else %}
+                    Need to change your phone number, middle name, or passport photograph? Update your record anytime.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <a href="{{ url_for('page.profile') }}" class="btn-edit-profile">
+            <i class="fa-solid fa-pen-to-square"></i> Edit Profile
+        </a>
+    </div>
+
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fa-solid fa-book"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ registered_courses|length if registered_courses is defined else 0 }}</h3>
+                <p>Registered Courses</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon gold">
+                <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ total_units if total_units is defined else 0 }}</h3>
+                <p>Total Credit Units</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ announcements|length if announcements is defined else 0 }}</h3>
+                <p>New Announcements</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Active</h3>
+                <p>Portal Status</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Two-Column Content -->
+    <div class="dashboard-grid">
+        <!-- Left Column: Registered Courses Table -->
+        <div class="dashboard-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-list-check"></i> Current Semester Courses</h2>
+                <a href="{{ url_for('page.courses') }}" class="panel-link">Manage Courses &rarr;</a>
+            </div>
+
+            {% if registered_courses %}
+            <div class="table-responsive">
+                <table class="courses-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Course Title</th>
+                            <th>Units</th>
+                            <th>Course Materials</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in registered_courses %}
+                        <tr>
+                            <td><strong>{{ course.code }}</strong></td>
+                            <td>{{ course.title }}</td>
+                            <td>{{ course.units }}</td>
+                            <td>
+                                <button type="button" class="btn-elearn">
+                                    <i class="fa-solid fa-laptop-file"></i> Access
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fa-solid fa-folder-open"></i>
+                <p>You have not registered any courses for this semester yet.</p>
+                <a href="#" class="btn-primary">Start Course Registration</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Column: Latest Announcements -->
+        <div class="dashboard-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-bell"></i> Departmental Notices</h2>
+                <a href="{{ url_for('page.announcements') }}" class="panel-link">View All &rarr;</a>
+            </div>
+
+            {% if announcements %}
+            <div class="announcement-list">
+                {% for notice in announcements %}
+                <article class="announcement-item">
+                    <span class="notice-date">{{ notice.created_at.strftime('%d %b, %Y') }}</span>
+                    <h4>{{ notice.title }}</h4>
+                    <p>{{ notice.body[:110] }}...</p>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fa-solid fa-bullhorn"></i>
+                <p>No announcements posted at the moment. Check back later for departmental updates.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,400 @@
+/* ===== Layout & Header ===== */
+.courses-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.courses-header {
+    background: linear-gradient(135deg, var(--dark-green, #073d14), var(--primary-green, #0b5d1e));
+    color: var(--white, #ffffff);
+    padding: 2rem 2.25rem;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+}
+
+.session-pill {
+    display: inline-block;
+    background-color: var(--accent-gold, #d4a017);
+    color: #052b0e;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+}
+
+.courses-header h1 {
+    font-size: 1.65rem;
+    margin-bottom: 0.25rem;
+}
+
+.courses-header p {
+    font-size: 0.92rem;
+    color: #e5e7eb;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.btn-gold,
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.68rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-gold {
+    background-color: var(--accent-gold, #d4a017);
+    color: #052b0e;
+}
+
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.14);
+    color: var(--white, #ffffff);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+/* ===== Add Course Form ===== */
+.course-form-card {
+    background-color: var(--white, #ffffff);
+    padding: 1.85rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.course-form-card.hidden {
+    display: none;
+}
+
+.course-form-card h3 {
+    color: var(--primary-green, #0b5d1e);
+    margin-bottom: 1.25rem;
+}
+
+.course-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.course-form .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.course-form label {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.course-form input,
+.course-form select {
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 6px;
+    font-size: 0.92rem;
+    background-color: #fafafa;
+}
+
+.btn-save-course,
+.course-form input[type="submit"] {
+    padding: 0.75rem 1.65rem;
+    background-color: var(--primary-green, #0b5d1e);
+    color: var(--white, #ffffff);
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-save-course:hover,
+.course-form input[type="submit"]:hover {
+    background-color: var(--dark-green, #073d14);
+    transform: translateY(-1px);
+}
+
+.course-form .form-actions {
+    margin-top: 1.25rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-save-course {
+    padding: 0.7rem 1.5rem;
+    background-color: var(--primary-green, #0b5d1e);
+    color: var(--white, #ffffff);
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ===== Semester & Level Filters ===== */
+.catalog-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.semester-tabs,
+.level-filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.sem-tab,
+.lvl-pill {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background-color: var(--white, #ffffff);
+    border: 1px solid var(--border-color, #e5e7eb);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-dark, #1f2937);
+}
+
+.sem-tab.active,
+.lvl-pill.active {
+    background-color: var(--primary-green, #0b5d1e);
+    color: var(--white, #ffffff);
+    border-color: var(--primary-green, #0b5d1e);
+}
+
+/* ===== Two-Column Workspace ===== */
+.courses-workspace {
+    display: grid;
+    grid-template-columns: 1.65fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.courses-workspace.admin-single-col {
+    grid-template-columns: 1fr;
+}
+
+.workspace-panel {
+    background-color: var(--white, #ffffff);
+    padding: 1.65rem;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.panel-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.9rem;
+    margin-bottom: 1.15rem;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.panel-title h2 {
+    font-size: 1.12rem;
+    color: var(--primary-green, #0b5d1e);
+}
+
+.unit-counter {
+    background-color: rgba(11, 93, 30, 0.12);
+    color: var(--primary-green, #0b5d1e);
+    padding: 0.3rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.unit-counter.limit-reached {
+    background-color: rgba(212, 160, 23, 0.22);
+    color: #9a6e06;
+}
+
+/* ===== Table & Buttons ===== */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.8rem 0.65rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.data-table th {
+    background-color: #f9fafb;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    color: var(--text-muted, #6b7280);
+}
+
+.lecturer-name {
+    display: block;
+    color: var(--text-muted, #6b7280);
+    font-size: 0.8rem;
+    margin-top: 0.15rem;
+}
+
+.level-tag {
+    background-color: #f3f4f6;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.action-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-register {
+    padding: 0.4rem 0.85rem;
+    background-color: var(--primary-green, #0b5d1e);
+    color: var(--white, #ffffff);
+    border: none;
+    border-radius: 5px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-register:hover {
+    background-color: var(--dark-green, #073d14);
+}
+
+.badge-registered {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #16a34a;
+}
+
+.btn-icon-delete {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.3rem;
+}
+
+.btn-icon-delete:hover {
+    color: #dc2626;
+}
+
+/* ===== Registered Slip Panel ===== */
+.registered-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.registered-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.9rem;
+    background-color: #f9fafb;
+    border-left: 3px solid var(--primary-green, #0b5d1e);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.88rem;
+}
+
+.registered-item small {
+    display: block;
+    color: var(--text-muted, #6b7280);
+    font-size: 0.8rem;
+}
+
+.btn-drop {
+    padding: 0.3rem 0.65rem;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-drop:hover {
+    background-color: #dc2626;
+    color: var(--white, #ffffff);
+}
+
+.btn-print-slip {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--accent-gold, #d4a017);
+    color: #052b0e;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.empty-box {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-muted, #6b7280);
+}
+
+.empty-box i {
+    font-size: 2rem;
+    color: #9ca3af;
+    margin-bottom: 0.5rem;
+}
+
+@media print {
+
+    header,
+    footer,
+    .courses-header,
+    .catalog-controls,
+    .workspace-panel:first-child,
+    .btn-drop,
+    .btn-print-slip {
+        display: none !important;
+    }
+
+    .courses-workspace {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+
+    .courses-workspace,
+    .course-form .form-grid {
+        grid-template-columns: 1fr;
+    }
+}

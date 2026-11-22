@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/admin.css') }}">
+{% endblock %}
+
+{% block title %}
+Admin Control Panel | Kwara State Polytechnic
+{% endblock %}
+
+{% block main %}
+<section class="dashboard-container">
+    <!-- Admin Header Banner -->
+    <div class="dashboard-banner">
+        <div class="user-profile-summary">
+            <img src="{{ url_for('static', filename='assets/' + (current_user.photo or 'photo.png')) }}"
+                alt="Admin Photo" class="profile-avatar">
+            <div>
+                <span class="session-badge">Administrator Portal</span>
+                <h1>Admin Control Panel</h1>
+                <p class="user-meta">
+                    Signed in as <strong>{{ current_user.surname }} {{ current_user.lastname }}</strong> ({{
+                    current_user.matric }})
+                </p>
+            </div>
+        </div>
+
+        <div class="banner-actions">
+            <a href="{{ url_for('page.courses') }}" class="btn-outline-light">
+                <i class="fa-solid fa-gauge"></i> Courses & Regs
+            </a>
+            <a href="{{ url_for('page.announcements') }}" class="btn-primary">
+                <i class="fa-solid fa-bullhorn"></i> Post Announcement
+            </a>
+        </div>
+    </div>
+
+    <!-- Platform Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-info">
+                <h3>{{ stats.total_users }}</h3>
+                <p>Total Accounts</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="fa-solid fa-user-graduate"></i></div>
+            <div class="stat-info">
+                <h3>{{ stats.students }}</h3>
+                <p>Students</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon gold"><i class="fa-solid fa-user-tie"></i></div>
+            <div class="stat-info">
+                <h3>{{ stats.classreps }}</h3>
+                <p>Class Reps</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="fa-solid fa-signal"></i></div>
+            <div class="stat-info">
+                <h3>{{ stats.online_now }}</h3>
+                <p>Online Now</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-panel calendar-admin-panel" id="calendar-management">
+        <div class="panel-header"><h2><i class="fa-solid fa-calendar-days"></i> Publish Academic Calendar</h2>
+            <a href="{{ url_for('calendar.view_calendar') }}" class="panel-link">View published calendar &rarr;</a></div>
+        <p>Upload a validated Excel file to publish calendar events. <strong>Publishing replaces existing
+        events only for the selected academic session and semester.</strong> Other calendars remain unchanged.</p>
+        <form action="{{ url_for('calendar.upload_calendar') }}" method="POST" enctype="multipart/form-data" class="calendar-upload-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label>Academic Session<input type="text" name="session" value="2026/2027" pattern="[0-9]{4}/[0-9]{4}" required placeholder="2026/2027"></label>
+            <label>Semester<select name="semester" required><option value="First">First Semester</option><option value="Second">Second Semester</option></select></label>
+            <label>Excel Spreadsheet (.xlsx)<input type="file" name="calendar_file" accept=".xlsx" required></label>
+            <button type="submit" class="calendar-publish-btn"><i class="fa-solid fa-cloud-arrow-up"></i> Publish Calendar</button>
+        </form>
+        <p class="calendar-help">Required columns: <code>title</code>, <code>start_date</code>. Optional:
+          <code>end_date</code>, <code>category</code>, <code>description</code>. Dates must be Excel dates or YYYY-MM-DD.
+          Maximum 1,000 events and 5 MB per file.</p>
+        <a href="{{ url_for('calendar.download_template') }}" class="calendar-template-link"><i class="fa-solid fa-file-excel"></i> Download Excel template</a>
+    </div>
+
+    <!-- User Management Panel -->
+    <div class="dashboard-panel">
+        <div class="panel-header admin-toolbar">
+            <h2><i class="fa-solid fa-users-gear"></i> Manage Portal Users</h2>
+
+            <form method="GET" action="#" class="admin-filter-form">
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Search matric or email">
+                <select name="role" onchange="this.form.submit()">
+                    <option value="all" {% if role_filter=='all' %}selected{% endif %}>All</option>
+                    <option value="student" {% if role_filter=='student' %}selected{% endif %}>Students</option>
+                    <option value="classrep" {% if role_filter=='classrep' %}selected{% endif %}>Class Reps</option>
+                    <option value="admin" {% if role_filter=='admin' %}selected{% endif %}>Admins</option>
+                </select>
+                <button type="submit" class="btn-filter">Search</button>
+            </form>
+        </div>
+
+        {% if users %}
+        <div class="table-responsive">
+            <table class="courses-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Matric No.</th>
+                        <th>Email / Mobile</th>
+                        <th>Online</th>
+                        <th>Role</th>
+                        <th>Level</th>
+                        <th>Assign Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td class="user-cell">
+                            <img src="{{ url_for('static', filename='assets/' + (user.photo or 'photo.png')) }}" alt=""
+                                class="mini-avatar">
+                            <span>{{ user.surname }} {{ user.lastname }}</span>
+                        </td>
+                        <td><strong>{{ user.matric }}</strong></td>
+                        <td>
+                            <div>{{ user.email }}</div>
+                            <small class="text-muted">{{ user.mobile or 'No phone' }}</small>
+                        </td>
+                        <td>
+                            {% if user.status %}
+                            <span class="status-pill approved">Online</span>
+                            {% else %}
+                            <span class="status-pill offline">Offline</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="role-badge role-{{ user.role.value }}">
+                                {{ user.role.value|upper }}
+                            </span>
+                        </td>
+                        {% if user.id != current_user.id %}
+                        <td>
+                            <form method="POST" action="{{ url_for('user.update_user_level', user_id=user.id) }}"
+                                class="role-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <select name="level" aria-label="Change level for {{ user.matric }}">
+                                    {% for lvl in ['ND I', 'ND II', 'HND I', 'HND II'] %}
+                                    <option value="{{ lvl }}" {% if user.level==lvl %}selected{% endif %}>
+                                        {{ lvl }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn-role-save">Save</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ url_for('user.update_user_role', user_id=user.id) }}"
+                                class="role-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <select name="role" aria-label="Change role for {{ user.matric }}">
+                                    {% for r in roles %}
+                                    <option value="{{ r.value }}" {% if user.role==r %}selected{% endif %}>
+                                        {{ r.value|capitalize }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn-role-save">Update</button>
+                            </form>
+                        </td>
+                        {% else %}
+                        <td colspan="2" class="center-cell">
+                            <small class="text-muted">Current Admin</small>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fa-solid fa-user-slash"></i>
+            <p>No users matched your search or role filter.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
